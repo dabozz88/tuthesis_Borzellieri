@@ -1,0 +1,97 @@
+\chapter{Design of Model Predictive Controller}
+
+\section{Self Notes}
+        \clearpage
+        
+        The system:
+        
+        \begin{equation*}
+            \frac{\mathrm{d} }{\mathrm{d} t} 
+            \left [ \begin{matrix}  V_{wt}\\ p\\ \alpha_r\\ V_{sd} \\  Q_{valve} \\ FW_{valve}  \end{matrix} \right ]  
+            =
+            \left [ \begin{matrix}  \left [ \begin{matrix}e_{11}& e_{12}& 0& 0 \\ e_{21}& e_{22}& 0& 0 \\ 0 & e_{32}& e_{33}& 0 \\ 0 & e_{42}& e_{43}& e_{44}\end{matrix} \right ] ^{-1} \left [ \begin{matrix} q_f  - q_s \\ Q + q_f h_f  - q_s h_s\\ Q + \alpha_r h_c q_{dc} \\ \frac{\rho_s}{T_d}  \left ( V_{sd}^0  - V_{sd}\right ) + \frac{h_f - h_w}{h_c}q_f \end{matrix} 
+            \right ] \\   \begin{matrix} \frac{\left(  Q_{valve}  - Q       \right)}{T_{v_{Q }}} \\\frac{\left( FW_{valve}  - q_{fw}  \right)}{T_{v_{fw}}}   \end{matrix}  \end{matrix} \right ]
+        \end{equation*}
+        
+        A stable operating point was found to be:
+        $$\begin{matrix}
+            x\left (0 \right) = x_0 =   \left [\begin{matrix} V_{wt0}\\ p_{0}\\  \alpha_{r0}\\ V_{sd0}\\ Q_{0}\\ q_{fw}\end{matrix} \right ] = \left [ \begin{matrix} 57.1 \\ 8.5 \\ 0.0524 \\ 4.9 \\ 86.78 \\ 50.8 \end{matrix} \right ]
+            & & 
+            u\left (0 \right) =  u_0 = \left [\begin{matrix} Q_{valve0} \\ q_{valve0} \\ \end{matrix} \right ] =  \left [\begin{matrix} 86.78\\ 50.8 \\ \end{matrix} \right ]  
+        \end{matrix}$$  
+        
+        \clearpage
+        Can be considered a non-linear state space equation of the form:
+        $$\dot{x}(t) = f\left ( x(t),u(t) \right )$$
+        $$y(t) = g\left ( x(t),u(t) \right )$$
+        
+        This is then discretized, where $n$ is an integer, and $T$ is the sampling time. 
+        
+        $$ \begin{matrix} x(t) = x(nT) & & u(t) = u(nT) \end{matrix}$$
+        
+        This can be linearized around an operating point to create a state space model:
+        $$ \begin{matrix} x(nT) & & u(nT) \end{matrix}$$
+        $$\begin{matrix}
+           \frac{\partial\Delta x(t)}{dt} = A_i^c \Delta x(t) + B_i^c \Delta u(t) & & &  A_i^c = \biggl.\frac{\partial f(x,u)}{\partial x}\biggr|_{x(nT), u(nT)} & & C_i^c = \biggl.\frac{\partial g(x,u)}{\partial x}\biggr|_{x(nT), u(nT)}\\
+            \Delta y(t) = C_i^c \Delta x(t) + D_i^c \Delta u(t) & & & B_i^c = \biggl.\frac{\partial f(x,u)}{\partial u}\biggr|_{x(nT), u(nT)} & & D_i^c = \biggl.\frac{\partial g(x,u)}{\partial u}\biggr|_{x(nT), u(nT)}
+        \end{matrix}$$
+        It should be noted that:
+        $$ \begin{matrix} x(t) = \Delta x(t) + x(nT) & & u(t) = \Delta u(t) + u(nT) \end{matrix}$$
+
+        
+        $$\begin{matrix}
+            \Delta x(k_i+1) = A_i \Delta  x(k_i) + B_i \Delta  u(k_i) & & & A_i = e^{A_i^c T} & B_i = \left (  \int_{0}^{T} e^{A_i^c \tau}\, d\tau \right ) B_i^c \\
+            \Delta y(k_i)   = C_i \Delta x(k_i) + D_i \Delta u(k_i)   & & & C_i = C_i^c       & D_i = D_i^c
+        \end{matrix}$$
+
+        $$K_{y_i} = \overset{N_c}{\overbrace{\begin{bmatrix} I& 0 & ... & 0 \end{bmatrix}}} (\Phi_i^{T}Q\Phi_i + R)^{-1}\Phi^{T}_i Q\overline{R_{s_i}}$$
+        
+        $$K_{mpc_i} = \overset{N_c}{\overbrace{\begin{bmatrix} I& 0 & ... & 0 \end{bmatrix}}} (\Phi_i^{T}Q\Phi_i + R)^{-1}\Phi^{T}_i Q F_i$$
+
+        Where: 
+        \begin{equation*}
+           \aligned
+                F_{i}^T &= \overset{N_p}{\overbrace{\begin{bmatrix} C_i A_i & C_i A^{2}_i & \cdots & C_i A^{N_{p}}_i \end{bmatrix}}} \\
+                \Phi_i &=  \overset{N_c}{\overbrace{\left [ \begin{array}{ccccc}
+                         C_i B_i & 0 & 0 & \cdots & 0 \\
+                         C_i A_i B_i & C_i B_i & 0 & \cdots & 0 \\
+                         C_i A^{2}_i B_i & C_i A_i B_i & C_i B_i & \cdots & 0 \\
+                         \vdots & \vdots & \vdots & \ddots & \vdots \\
+                         C_i A^{N_{p}-1}_i B_i & C_i A^{N_{p}-2}_i B_i & C_i A^{N_{p}-3}_i B_i & \cdots &  C_i A_{i}^{N_{p}-N_{c}} B_i \end{array}  \right ]}} \\
+                \overline R_{s_i}^T &= \overset{N_p}{\overbrace{\begin{bmatrix} 1& 1 & \cdots & 1 \end{bmatrix}}}
+            \endaligned
+        \end{equation*}
+            
+            
+
+
+
+
+
+            \clearpage
+            The algorithm can be summarized as follows:
+            \begin{alg}
+                Implementation of MPC on Nonlinear Systems
+                \begin{enumerate}
+                    \item Linearize the continuous time system with respect to the current state $\{x(t_i), u(t_i)\} $.  
+                        $$\begin{matrix}
+                            \frac{\partial\Delta x(t)}{dt} = A_i^c \Delta x(t) + B_i^c \Delta u(t) & & &  A_i^c = \biggl.\frac{\partial f(x,u)}{\partial x}\biggr|_{x(t_i), u(t_i)} & & C_i^c = \biggl.\frac{\partial g(x,u)}{\partial x}\biggr|_{x(t_i), u(t_i)}\\
+                            \Delta y(t) = C_i^c \Delta x(t) + D_i^c \Delta u(t) & & & B_i^c = \biggl.\frac{\partial f(x,u)}{\partial u}\biggr|_{x(t_i), u(t_i)} & & D_i^c = \biggl.\frac{\partial g(x,u)}{\partial u}\biggr|_{x(t_i), u(t_i)}
+                        \end{matrix}$$
+                        $$ \begin{matrix} x(t) = \Delta x(t) + x(t_i) & & u(t) = \Delta u(t) + u(t_i) \end{matrix}$$
+                    
+                    \item Find the discrete time model \eqref{eq:non4} of the linearized system at slot $k_i$.
+                        $$\begin{matrix}
+                            \Delta x(k+1) = A_i \Delta  x(k) + B_i \Delta  u(k) & & & A_i = e^{A_i^c T} & B_i = \left (  \int_{0}^{T} e^{A_i^c \tau}\, d\tau \right ) B_i^c \\
+                            \Delta y(k)   = C_i \Delta x(k) + D_i \Delta u(k)   & & & C_i = C_i^c       & D_i = D_i^c
+                        \end{matrix}$$
+                        $$ \begin{matrix} x(k) = \Delta x(k) + x(t_i) & & u(k) = \Delta u(k) + u(t_i) \end{matrix}$$
+                    \item Compute the MPC gains $k_{mpc}$ and $K_y$ using the algorithm discussed in the previous section.  Apply the control signal $u(k_i)$.
+                        $$\Delta u(k_i) = K_{y_i} \Delta r(k_i) - K_{mpc_i} \Delta x(k_i) $$
+                    \item Measure the updated system response $x(k_i+1)$
+                        $$x(k) = $$
+                    \item Repeat from Step 1.
+                \end{enumerate}
+                % \label{algorithm:NonLinMPC}
+            \end{alg}
+

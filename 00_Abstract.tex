@@ -1,0 +1,9 @@
+\begin{abstract}
+
+This paper compares control strategies for a drum boiler unit. Drum Boilers are a highly nonlinear system, as there are non-minimum phase shrink-and-swell effects to account for. A more complex control strategy may prove to be a better option than what is used in industry today. The goal is to prove that Model Predictive Control (MPC) will provide superior results when compared to more classical approaches, like three element cascade control with a feed forward or using a Linear Quadratic Regulator (LQR).  
+
+The process is built around the \r{A}str\"{o}m-Bell non-linear complex drum-boiler model. The model is extended with super-heater and turbine dynamics using an approach from an Iacob paper. The simplification of controlling heat flux directly will be used, instead of modeling the heat transfer and fuel combustion from the air side of the boiler. The implementation is carried out in MatLab. The simulation results are focused on automatic control operation and finding satisfactory response behaviors in each controller type. 
+
+The simulated responses will be compared by a few defining characteristics, such as settling time, percent overshoot, and control energy used. 
+
+\end{abstract}

@@ -1,0 +1,78 @@
+\documentclass[12pt]{tuthesis}
+\def\dsp{\def\baselinestretch{2.0}\large\normalsize}
+
+\usepackage{amsmath}
+\usepackage{pgf}
+%\usepackage{ifthen}
+%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode} % Used for Matlab Code in Appendix
+%\usepackage{breqn} % use dmath to help find manual breaks. 
+%\usepackage{amsthm}
+%\usepackage{amscd}
+%\usepackage{graphicx}
+%\usepackage{lscape}
+
+\newtheorem{rem}{Remark}[chapter]
+\newtheorem{alg}{Algorithm}[chapter]
+
+\setlength{\oddsidemargin}{.75in}
+\setlength{\evensidemargin}{.75in}
+\setlength{\textwidth}{5.5in}
+
+
+% Figure Scale Factors
+% Chapter 1
+    \pgfmathsetmacro{\ScaleModelImage}{0.75}
+% Chapter 2
+    \pgfmathsetmacro{\ScalePIDControlImageA}{0.85}
+    \pgfmathsetmacro{\ScalePIDControlImageB}{0.95}
+% Chapter 3
+    \pgfmathsetmacro{\ScaleMLFigSteam}{1}
+    \pgfmathsetmacro{\ScaleABFigThree}{0.75}
+    \pgfmathsetmacro{\ScaleMLFigThree}{1}
+% Chapter 4
+    \pgfmathsetmacro{\ScaleMLFigFour}{0.75}
+
+\begin{document}
+    %% Declarations for Front Matter
+    \title{A Comparison of Control Methods used on the Water Side of a Drum Boiler}
+    \author{Robert A. Borzellieri, P.E.}
+    \degreeyear{July, 2019}
+    \degree{Master of Science in Electrical Engineering}
+    \chair{Dr Saroj K. Biswas}
+    \field{Electrical Engineering}
+    \campus{}
+    \maketitle
+    \begin{frontmatter}
+        \copyrightpage
+        \include{00_Abstract}
+        \include{00_Acknowledgements}
+        \include{00_Dedication}
+        \tableofcontents
+        \listoffigures
+        \listoftables
+    \end{frontmatter}
+    
+    % Start of Actual Document
+    \include{01_Introduction}
+    \include{02_System_Control_Methods}
+    \include{03_System_Modeling}
+    \include{04_3_Element}
+    \include{05_Future_Work_Proposal}
+    %\include{06_LQR_Design}
+    %\include{07_MPC_Design}
+    %\include{08_Comparisons}
+    %\include{09_Conclusions}
+    
+    % Bibliography
+    %\nocite{*}
+    \bibliographystyle{plain}
+    \bibliography{tuthesis.bib}
+    
+    %% Appendix
+    %\appendix % Ancillary material should be put in appendices, which appear after the bibliography.
+    %\chapter{MatLab Files}
+    %\section{X-Steam.m}
+    %\lstinputlisting{Matlab/Test.m}
+    %% \mcode{for i=1:3, disp('cool'); end;} 
+
+\end{document}

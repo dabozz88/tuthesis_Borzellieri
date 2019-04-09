@@ -1,0 +1,15 @@
+\chapter{Future Work}
+
+The goals of this paper are to investigate the limitations of conventional controls systems, and analyze if a more complex approach, such as MPC. A boiler model has been created \eqref{eq:Valve_Model_1} and verified against previous work, and {\it three element control} has been simulated. Future work includes controller design for both LQR and MPC, as well as an analysis of the controllers. 
+
+\section{Linear Quadratic Regulator}
+
+    Citing previous works, the plant will be linearized at 50\% of full load and then a LQR controller will be designed by adopting a cheap control methodology and using trial and error methods. This linearly designed controller will then be applied to the nonlinear system \eqref{eq:Valve_Model_1}.
+
+\section{Model Predictive Control}
+
+    Using the model \eqref{eq:Valve_Model_1}, the algorithm \ref{algorithm:NonLinMPC} will be applied as a nonlinear controller. Design considerations will be made for $N_p$ and $N_c$, as they will be critical in the control implication. If too small, the shrink/swell effects will drive the calculations and cause instability. If too large, calculation times will exceed what is practical for use. 
+
+\section{Analysis}
+
+    A controller analysis will be created comparing the Settling Time and Overshoot (\%) for all three controllers. A similar analysis was done in previous works \cite{Panwar}, however that comparison was between controllers that used a Steam Turbine Valve and a Feed Water Valve as inputs and treated Heat input as a disturbance. Figure 14-15 and Table 3 in \cite{Panwar} compare the different controllers and a similar analysis will be performed here, however control input will also be considered. 
